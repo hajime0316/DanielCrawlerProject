@@ -14,6 +14,9 @@
 #include "gpio.h"
 #include "can.h"
 
+// 設定項目
+// 左クローラー：MCU_ID = 0X0A，緑LEDを点滅
+// 右クローラー：MCU_ID = 0X0B，青LEDを点滅
 static const int MCU_ID = 0X0A;
 static const uint16_t BLINK_LED_GPIO_PIN = LED_G_Pin;
 
