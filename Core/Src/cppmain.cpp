@@ -42,16 +42,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   // 10msecタイマ
   if(htim->Instance == TIM1) {
     // エンコーダの値の計算
-    static int last_encouder_count = TIM4->CNT;
+    static int last_encoder_count = TIM4->CNT;
     int encoder_count = TIM4->CNT;
-    int division_encoder_count = encoder_count - last_encouder_count;
+    int division_encoder_count = encoder_count - last_encoder_count;
     if(division_encoder_count > MAX_ENCODER_COUNT / 2) {
       division_encoder_count -= (MAX_ENCODER_COUNT + 1);
     }
     else if(division_encoder_count < -(MAX_ENCODER_COUNT / 2)) {
       division_encoder_count += (MAX_ENCODER_COUNT + 1);
     }
-    last_encouder_count = encoder_count;
+    last_encoder_count = encoder_count;
 
     global_division_encoder_count = division_encoder_count; // デバッグ用
 
