@@ -39,7 +39,7 @@ void loop(void) {
 //**************************
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  // 10msecタイマ
+  // 5msecタイマ
   if(htim->Instance == TIM1) {
     // エンコーダの値の計算
     static int last_encoder_count = TIM4->CNT;
@@ -64,7 +64,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     // デバッグ用に緑LEDを点滅
     static int i = 0;
-    if(i >= 100) {
+    if(i >= 20) {
       HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
       i = 0;
     }
