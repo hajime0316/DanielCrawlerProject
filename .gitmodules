@@ -1,0 +1,3 @@
+[submodule "Core/Src/stm32_easy_can"]
+	path = Core/Src/stm32_easy_can
+	url = git@github.com:hajime0316/stm32_easy_can.git
