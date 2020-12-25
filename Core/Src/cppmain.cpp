@@ -14,6 +14,8 @@
 #include "gpio.h"
 #include "can.h"
 
+static const int MCU_ID = 0X0A;
+
 static int global_division_encoder_count = 0;
 
 // モジュールのインクルード
@@ -21,7 +23,7 @@ static int global_division_encoder_count = 0;
 
 void setup(void) {
   // stm32_easy_canモジュールの初期化
-  stm32_easy_can_init(&hcan, 0X0C, 0X7FF);
+  stm32_easy_can_init(&hcan, MCU_ID, 0X7FF);
   // エンコーダスタート
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   // タイマスタート
