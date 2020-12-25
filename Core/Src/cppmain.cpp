@@ -16,7 +16,7 @@
 
 static const int MCU_ID = 0X0A;
 
-static int global_division_encoder_count = 0;
+static int global_divided_encoder_count = 0;
 
 // モジュールのインクルード
 #include "stm32_easy_can/stm32_easy_can.h"
@@ -31,7 +31,7 @@ void setup(void) {
 }
 
 void loop(void) {
-  printf("%d\r\n", global_division_encoder_count);
+  printf("%d\r\n", global_divided_encoder_count);
 }
 
 //**************************
@@ -44,22 +44,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     // エンコーダの値の計算
     static int last_encoder_count = TIM4->CNT;
     int encoder_count = TIM4->CNT;
-    int division_encoder_count = encoder_count - last_encoder_count;
-    if(division_encoder_count > MAX_ENCODER_COUNT / 2) {
-      division_encoder_count -= (MAX_ENCODER_COUNT + 1);
+    int divided_encoder_count = encoder_count - last_encoder_count;
+    if(divided_encoder_count > MAX_ENCODER_COUNT / 2) {
+      divided_encoder_count -= (MAX_ENCODER_COUNT + 1);
     }
-    else if(division_encoder_count < -(MAX_ENCODER_COUNT / 2)) {
-      division_encoder_count += (MAX_ENCODER_COUNT + 1);
+    else if(divided_encoder_count < -(MAX_ENCODER_COUNT / 2)) {
+      divided_encoder_count += (MAX_ENCODER_COUNT + 1);
     }
     last_encoder_count = encoder_count;
 
-    global_division_encoder_count = division_encoder_count; // デバッグ用
+    global_divided_encoder_count = divided_encoder_count; // デバッグ用
 
     // 送信データ生成->送信
     int id = (1 << 10) | MCU_ID;
     unsigned char message[2];
-    message[0] = division_encoder_count >> 8 & 0XFF;
-    message[1] = division_encoder_count & 0XFF;
+    message[0] = divided_encoder_count >> 8 & 0XFF;
+    message[1] = divided_encoder_count & 0XFF;
     stm32_easy_can_transmit_message(id, sizeof(message), message);
 
     // デバッグ用に緑LEDを点滅
