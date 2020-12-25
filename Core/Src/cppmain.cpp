@@ -55,13 +55,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     global_division_encoder_count = division_encoder_count; // デバッグ用
 
-    // 送信データ生成
-
-    // データ送信
-    int id = 0;
-    int dlc = 3;
-    unsigned char message[8] = {'A', 'B', 'C'};
-    stm32_easy_can_transmit_message(id, dlc, message);
+    // 送信データ生成->送信
+    int id = (1 << 10) | MCU_ID;
+    unsigned char message[2];
+    message[0] = division_encoder_count >> 8 & 0XFF;
+    message[1] = division_encoder_count & 0XFF;
+    stm32_easy_can_transmit_message(id, sizeof(message), message);
 
     // デバッグ用に緑LEDを点滅
     static int i = 0;
