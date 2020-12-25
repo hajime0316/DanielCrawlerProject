@@ -17,6 +17,7 @@
 static const int MCU_ID = 0X0A;
 
 static int global_divided_encoder_count = 0;
+static const uint16_t BLINK_LED_GPIO_PIN = LED_G_Pin;
 
 // モジュールのインクルード
 #include "stm32_easy_can/stm32_easy_can.h"
@@ -39,7 +40,7 @@ void loop(void) {
 //**************************
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  // 10msecタイマ
+  // 5msecタイマ
   if(htim->Instance == TIM1) {
     // エンコーダの値の計算
     static int last_encoder_count = TIM4->CNT;
@@ -64,8 +65,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     // デバッグ用に緑LEDを点滅
     static int i = 0;
-    if(i >= 100) {
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+    if(i >= 20) {
+      HAL_GPIO_TogglePin(GPIOC, BLINK_LED_GPIO_PIN);
       i = 0;
     }
     else {
