@@ -77,37 +77,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //**************************
 //    CAN通信受信割り込み
 //**************************
-//void stm32_easy_can_interrupt_handler(void)
-//{
-//  int receive_id;
-//  int receive_dlc;
-//  unsigned char receive_message[8];
-//
-//  // 受信データ取得
-//  stm32_easy_can_get_receive_message(&receive_id, &receive_dlc, receive_message);
-//
-//  // 受信データ処理
-//  MdDataType receive_md_data_type
-//    = canmd_manager_set_can_receive_data(receive_message, receive_dlc);
-//
-//  // 送信データ生成
-//  int transmit_id;
-//  int transmit_dlc;
-//  unsigned char transmit_message[8];
-//
-//  // CAN通信の送信ID生成
-//  transmit_id = md_id   << 5 | 0b00000 ;
-//  //            送信元ID(5bit)  送信先ID(5bit)
-//
-//  if(receive_md_data_type != MD_DATA_TYPE_MOTOR_CONTROL_DATA) {
-//    // 受信メッセージをそのまま送信メッセージとする
-//    transmit_dlc = receive_dlc;
-//    for(int i = 0; i < receive_dlc; i++) {
-//       transmit_message[i] = receive_message[i];
-//    }
-//  }
-//  // データ送信
-//  stm32_easy_can_transmit_message(transmit_id, transmit_dlc, transmit_message);
-//
-//  return;
-//}
+void stm32_easy_can_interrupt_handler(void)
+{
+}
