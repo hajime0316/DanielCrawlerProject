@@ -20,7 +20,8 @@ static const uint16_t BLINK_LED_GPIO_PIN = LED_G_Pin;
 // モジュールのインクルード
 #include "stm32_easy_can/stm32_easy_can.h"
 
-void setup(void) {
+void setup(void)
+{
   // stm32_easy_canモジュールの初期化
   stm32_easy_can_init(&hcan, MCU_ID, 0X7FF);
   // エンコーダスタート
@@ -29,7 +30,8 @@ void setup(void) {
   HAL_TIM_Base_Start_IT(&htim1);
 }
 
-void loop(void) {
+void loop(void)
+{
 }
 
 //**************************
@@ -38,15 +40,15 @@ void loop(void) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   // 5msecタイマ
-  if(htim->Instance == TIM1) {
+  if (htim->Instance == TIM1) {
     // エンコーダの値の計算
     static int last_encoder_count = TIM4->CNT;
     int encoder_count = TIM4->CNT;
     int divided_encoder_count = encoder_count - last_encoder_count;
-    if(divided_encoder_count > MAX_ENCODER_COUNT / 2) {
+    if (divided_encoder_count > MAX_ENCODER_COUNT / 2) {
       divided_encoder_count -= (MAX_ENCODER_COUNT + 1);
     }
-    else if(divided_encoder_count < -(MAX_ENCODER_COUNT / 2)) {
+    else if (divided_encoder_count < -(MAX_ENCODER_COUNT / 2)) {
       divided_encoder_count += (MAX_ENCODER_COUNT + 1);
     }
     last_encoder_count = encoder_count;
@@ -60,7 +62,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     // デバッグ用にLEDを点滅
     static int i = 0;
-    if(i >= 20) {
+    if (i >= 20) {
       HAL_GPIO_TogglePin(GPIOC, BLINK_LED_GPIO_PIN);
       i = 0;
     }
