@@ -12,13 +12,16 @@
 #include "main.h"
 #include "tim.h"
 #include "gpio.h"
+#include "can.h"
 
 static int global_division_encoder_count = 0;
 
 // モジュールのインクルード
-//#include "stm32_easy_can/stm32_easy_can.h"
+#include "stm32_easy_can/stm32_easy_can.h"
 
 void setup(void) {
+  // stm32_easy_canモジュールの初期化
+  stm32_easy_can_init(&hcan, 0X0C, 0X7FF);
   // エンコーダスタート
   HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   // タイマスタート
@@ -53,7 +56,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     // 送信データ生成
 
     // データ送信
-    //stm32_easy_can_transmit_message(transmit_id, transmit_dlc, transmit_message);
+    int id = 0;
+    int dlc = 3;
+    unsigned char message[8] = {'A', 'B', 'C'};
+    stm32_easy_can_transmit_message(id, dlc, message);
 
     // デバッグ用に緑LEDを点滅
     static int i = 0;
