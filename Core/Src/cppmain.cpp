@@ -15,8 +15,6 @@
 #include "can.h"
 
 static const int MCU_ID = 0X0A;
-
-static int global_divided_encoder_count = 0;
 static const uint16_t BLINK_LED_GPIO_PIN = LED_G_Pin;
 
 // モジュールのインクルード
@@ -32,7 +30,6 @@ void setup(void) {
 }
 
 void loop(void) {
-  printf("%d\r\n", global_divided_encoder_count);
 }
 
 //**************************
@@ -54,8 +51,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     }
     last_encoder_count = encoder_count;
 
-    global_divided_encoder_count = divided_encoder_count; // デバッグ用
-
     // 送信データ生成->送信
     int id = (1 << 10) | MCU_ID;
     unsigned char message[2];
@@ -63,7 +58,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     message[1] = divided_encoder_count & 0XFF;
     stm32_easy_can_transmit_message(id, sizeof(message), message);
 
-    // デバッグ用に緑LEDを点滅
+    // デバッグ用にLEDを点滅
     static int i = 0;
     if(i >= 20) {
       HAL_GPIO_TogglePin(GPIOC, BLINK_LED_GPIO_PIN);
