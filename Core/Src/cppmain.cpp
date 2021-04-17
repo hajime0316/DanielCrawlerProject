@@ -14,15 +14,17 @@
 #include "gpio.h"
 #include "can.h"
 
+// 設定項目
+// 左クローラー：MCU_ID = 0X0A，緑LEDを点滅
+// 右クローラー：MCU_ID = 0X0B，青LEDを点滅
 static const int MCU_ID = 0X0A;
-
-static int global_divided_encoder_count = 0;
 static const uint16_t BLINK_LED_GPIO_PIN = LED_G_Pin;
 
 // モジュールのインクルード
 #include "stm32_easy_can/stm32_easy_can.h"
 
-void setup(void) {
+void setup(void)
+{
   // stm32_easy_canモジュールの初期化
   stm32_easy_can_init(&hcan, MCU_ID, 0X7FF);
   // エンコーダスタート
@@ -31,8 +33,8 @@ void setup(void) {
   HAL_TIM_Base_Start_IT(&htim1);
 }
 
-void loop(void) {
-  printf("%d\r\n", global_divided_encoder_count);
+void loop(void)
+{
 }
 
 //**************************
@@ -41,20 +43,18 @@ void loop(void) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   // 5msecタイマ
-  if(htim->Instance == TIM1) {
+  if (htim->Instance == TIM1) {
     // エンコーダの値の計算
     static int last_encoder_count = TIM4->CNT;
     int encoder_count = TIM4->CNT;
     int divided_encoder_count = encoder_count - last_encoder_count;
-    if(divided_encoder_count > MAX_ENCODER_COUNT / 2) {
+    if (divided_encoder_count > MAX_ENCODER_COUNT / 2) {
       divided_encoder_count -= (MAX_ENCODER_COUNT + 1);
     }
-    else if(divided_encoder_count < -(MAX_ENCODER_COUNT / 2)) {
+    else if (divided_encoder_count < -(MAX_ENCODER_COUNT / 2)) {
       divided_encoder_count += (MAX_ENCODER_COUNT + 1);
     }
     last_encoder_count = encoder_count;
-
-    global_divided_encoder_count = divided_encoder_count; // デバッグ用
 
     // 送信データ生成->送信
     int id = (1 << 10) | MCU_ID;
@@ -63,9 +63,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     message[1] = divided_encoder_count & 0XFF;
     stm32_easy_can_transmit_message(id, sizeof(message), message);
 
-    // デバッグ用に緑LEDを点滅
+    // デバッグ用にLEDを点滅
     static int i = 0;
-    if(i >= 20) {
+    if (i >= 20) {
       HAL_GPIO_TogglePin(GPIOC, BLINK_LED_GPIO_PIN);
       i = 0;
     }
